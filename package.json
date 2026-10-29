@@ -1,0 +1,134 @@
+{
+  "name": "localelens",
+  "displayName": "LocaleLens",
+  "description": "Find missing, extra, and empty translation keys in JSON locale files.",
+  "version": "0.2.0",
+  "publisher": "Almeida96",
+  "author": "Igor Almeida",
+  "license": "MIT",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "i18n",
+    "localization",
+    "translations",
+    "json"
+  ],
+  "main": "./dist/extension.cjs",
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "localeLens.refresh",
+        "title": "Refresh",
+        "category": "LocaleLens",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "localeLens.openSettings",
+        "title": "Open Settings",
+        "category": "LocaleLens",
+        "icon": "$(gear)"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "localeLens.results",
+          "name": "LocaleLens"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "localeLens.refresh",
+          "when": "view == localeLens.results",
+          "group": "navigation@1"
+        },
+        {
+          "command": "localeLens.openSettings",
+          "when": "view == localeLens.results",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "LocaleLens",
+      "properties": {
+        "localeLens.directory": {
+          "type": "string",
+          "default": "locales",
+          "scope": "resource",
+          "description": "Directory containing locale JSON files, relative to each workspace folder. Subdirectories are not scanned."
+        },
+        "localeLens.referenceLocale": {
+          "type": "string",
+          "default": "en",
+          "scope": "resource",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+          "description": "Reference file name without .json, such as en or en-GB."
+        },
+        "localeLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Check translation files in this workspace folder."
+        },
+        "localeLens.placeholders": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "braces",
+            "i18next",
+            "none"
+          ],
+          "default": "auto",
+          "scope": "resource",
+          "description": "Check named interpolation parameters using both syntaxes, one syntax, or no placeholder checks."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "tsc --noEmit",
+    "test": "node scripts/build.mjs && node --test test/core.test.cjs",
+    "test:extension": "node scripts/build.mjs && node scripts/test-extension.mjs",
+    "package": "node scripts/build.mjs && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "dependencies": {
+    "jsonc-parser": "3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "1.96.0",
+    "@vscode/test-electron": "3.1.0",
+    "@vscode/vsce": "4.0.0",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Almeida96/localelens.git"
+  }
+}
