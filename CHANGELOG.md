@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+Reject JSON deeper than 64 containers before parsing, so a deeply nested catalog cannot overflow the extension's parser stack.
+
 ## 0.2.0 — 2026-10-28
 
 Report missing and renamed interpolation parameters, with per-folder syntax settings and reference locations.

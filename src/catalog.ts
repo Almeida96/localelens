@@ -41,6 +41,21 @@ function location(node: Node): Location {
 }
 
 export function parseCatalog(text: string): Catalog {
+  let depth = 0, quoted = false, escaped = false;
+  for (let offset = 0; offset < text.length; offset++) {
+    const character = text[offset];
+    if (quoted) {
+      if (escaped) escaped = false;
+      else if (character === '\\') escaped = true;
+      else if (character === '"') quoted = false;
+    } else if (character === '"') quoted = true;
+    else if (character === '{' || character === '[') {
+      if (++depth > 64) return {
+        entries: new Map(), objects: new Map(), valid: false,
+        issues: [{ code: 'json', message: 'JSON nesting exceeds 64 levels.', offset, length: 1 }],
+      };
+    } else if (character === '}' || character === ']') depth = Math.max(0, depth - 1);
+  }
   const errors: ParseError[] = [];
   // Keep offsets intact when a file starts with a UTF-8 byte-order mark.
   const input = text.startsWith('\uFEFF') ? ` ${text.slice(1)}` : text;

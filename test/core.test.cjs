@@ -4,6 +4,13 @@ const { applyEdits } = require('jsonc-parser');
 const { parseCatalog, compareCatalogs, displayKey, keyId, canInsert, missingKeyEdits } = require('../dist/catalog.cjs');
 
 const catalog = value => parseCatalog(JSON.stringify(value));
+test('deep catalogs produce a diagnostic without overflowing the parser stack', () => {
+  const text = '{"a":'.repeat(10000) + '"value"' + '}'.repeat(10000);
+  const result = parseCatalog(text);
+  assert.equal(result.valid, false);
+  assert.match(result.issues[0].message, /64 levels/);
+  assert.equal(catalog({ text: '{'.repeat(100) + '\\"quoted' }).valid, true);
+});
 const differences = (reference, target) => compareCatalogs(catalog(reference), catalog(target));
 
 test('reports lost and renamed interpolation parameters with reference locations', () => {

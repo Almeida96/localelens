@@ -1,5 +1,7 @@
 # LocaleLens
 
+[![CI](https://github.com/Almeida96/localelens/actions/workflows/ci.yml/badge.svg)](https://github.com/Almeida96/localelens/actions/workflows/ci.yml)
+
 Find missing keys, empty translations, and mismatched interpolation parameters in VS Code.
 
 LocaleLens compares JSON locale files against a reference file. Results appear in the Explorer sidebar and the Problems panel, and update as you edit.
@@ -74,7 +76,7 @@ This is a named-parameter check, not an ICU MessageFormat parser. ICU plural/sel
 
 - One reference catalog per workspace folder, with one `.json` file per locale in the same directory.
 - Strict JSON with strings and nested objects. Comments, trailing commas, arrays, numbers, booleans, and null values are not supported.
-- Only files directly inside the configured directory are checked. There is a limit of 200 JSON files per directory and 1 MiB per file.
+- Only files directly inside the configured directory are checked. There is a limit of 200 JSON files per directory, 1 MiB per file and 64 nested containers. Deeper input produces a diagnostic before recursive parsing.
 - Keys are compared exactly. LocaleLens does not check translation quality, plural rules, or references from application code.
 - Unsaved changes are included. Files are changed only when you apply a quick fix.
 
